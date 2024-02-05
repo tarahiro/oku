@@ -47,49 +47,28 @@ public class ReportController : MonoBehaviour
     public void ProgressReport(int ProgressTickCount)
     {
         //レベル判定
-        SetEfficiencyLevel(JudgeLevel(m_mainManager.gameTime));
+        SetEfficiencyLevel(JudgeLevel(StaticVariableCollector.gameTime));
 
-        //レポート進行
-        if (m_mainManager.mainState != MainManager.MainState.Savotage && !m_isExausted)
+        if (m_reportList[0].IsClearReport(StaticVariableCollector.gameTime, ProgressTickCount * c_reportEfficiency[m_currentLevel]))
         {
-
-            if (m_reportList.Count > 0)
-            {
-
-                if (m_reportList[0].IsClearReport(m_mainManager.gameTime, ProgressTickCount * c_reportEfficiency[m_currentLevel]))
-                {
-                    ClearReport();
-                }
-
-                //メンタル消費
-                m_mental.ComsumpMental(ProgressTickCount);
-            }
-            else
-            {
-                //メンタル回復
-                m_mental.RestoreMental(ProgressTickCount);
-                m_pcDisplayView.Rest();
-            }
-        }
-        else
-        {
-            //メンタル回復
-            m_mental.RestoreMental(ProgressTickCount);
+            ClearReport();
         }
 
+        //メンタル消費
+        m_mental.ComsumpMental(ProgressTickCount);
+
+    }
+
+    public void CheckDeadLine()
+    {
         //レポート締め切り超過判定
         for (int i = 0; i < m_reportList.Count; i++)
         {
-            if (m_mainManager.gameTime > m_reportList[i].calculateDeadLine)
+            if (StaticVariableCollector.gameTime > m_reportList[i].calculateDeadLine)
             {
                 m_mainManager.GameOver();
             }
         }
-    }
-
-    public void SetExaust(bool isExausted)
-    {
-        m_isExausted = isExausted;
     }
 
     public bool IsReportExist()
@@ -115,12 +94,13 @@ public class ReportController : MonoBehaviour
         m_reportList.RemoveAt(0);
         m_view.Clear();
         m_pcDisplayView.ClearReport();
+        m_mainManager.ClearReport();
     }
 
     int JudgeLevel(DateTime NowGameTime)
     {
         //サボり中ならレベル0
-        if (m_mainManager.mainState == MainManager.MainState.Savotage) return 0;
+        if (StaticVariableCollector.mainState == MainManager.MainState.Savotage) return 0;
 
         //スタックされたレポートがなかったらレベル0
         if (m_reportList.Count == 0) return 0;

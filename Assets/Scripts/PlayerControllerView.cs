@@ -25,16 +25,24 @@ public class PlayerControllerView : MonoBehaviour
         m_savotageText.text = "ÉTÉ{ÇËíÜ";
     }
 
-    public void SetExaust(bool isExaust)
+    public void Exaust()
     {
-        if (isExaust)
-        {
-            m_savotageText.text = "ãxåeíÜ...";
-        }
-        else
-        {
-            m_savotageText.text = "Z : ÉTÉ{ÇÈ";
-        }
+        m_savotageText.text = "ãxåeíÜ...";
+    }
+
+    public void StartReport()
+    {
+        SetTextNeutral();
+    }
+
+    public void Rest()
+    {
+        SetTextNeutral();
+    }
+
+    void SetTextNeutral()
+    {
+        m_savotageText.text = "Z:ÉTÉ{ÇÈ";
 
     }
 }

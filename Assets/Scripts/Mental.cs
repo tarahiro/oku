@@ -28,19 +28,16 @@ public class Mental : MonoBehaviour
 
     public void RestoreMental(int ProgressTickCount)
     {
-        if (!m_isExausted)
+        SetMental(m_mental + ProgressTickCount * c_tickToRestoreMentalRatio, false);
+    }
+    public void RestoreExhaust(int ProgressTickCount)
+    {
+        m_exaustGauge -= ProgressTickCount * c_tickToRestoreExhaustRatio;
+        if (m_exaustGauge < 0)
         {
-            SetMental(m_mental + ProgressTickCount * c_tickToRestoreMentalRatio, false);
+            Revival();
         }
-        else
-        {
-            m_exaustGauge -= ProgressTickCount * c_tickToRestoreExhaustRatio;
-            if(m_exaustGauge < 0)
-            {
-                Revival();
-            }
-            m_view.RestoreExaust(m_exaustGauge);
-        }
+        m_view.RestoreExaust(m_exaustGauge);
     }
 
     void SetMental(float mental, bool isConsump)
@@ -71,18 +68,16 @@ public class Mental : MonoBehaviour
 
     void Exhaust()
     {
-        m_isExausted = true;
         m_exaustGauge = 1;
         m_view.Exaust(m_exaustGauge);
-        mainManagerCache.SetExaust(m_isExausted);
+        mainManagerCache.Exaust();
     }
 
     void Revival()
     {
-        m_isExausted = false;
         m_exaustGauge = 0;
         m_view.Revival();
-        mainManagerCache.SetExaust(m_isExausted);
+        mainManagerCache.RemoveExaust();
         SetMental(0.5f, false);
     }
 

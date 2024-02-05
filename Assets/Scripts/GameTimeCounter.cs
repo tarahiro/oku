@@ -34,7 +34,7 @@ public class GameTimeCounter : MonoBehaviour
             int TickCount = (int)m_residueTime / TickSecond;
 
             //çXêVèàóù
-            UpdateDateTime(new DateTime(m_mainManagerCache.gameTime.Ticks + TimeSpan.TicksPerSecond * TickSecond * TickCount),TickCount);
+            UpdateDateTime(new DateTime(StaticVariableCollector.gameTime.Ticks + TimeSpan.TicksPerSecond * TickSecond * TickCount),TickCount);
 
             m_residueTime -= TickSecond * TickCount;
         }

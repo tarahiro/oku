@@ -17,26 +17,28 @@ public class PlayerInputReciever : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Z))
         {
-            if (m_mainManagerCache.mainState != MainManager.MainState.Savotage)
+            if (StaticVariableCollector.mainState != MainManager.MainState.Savotage)
             {
                 Savotage();
             }
         }
-        /*
         else
         {
-            if (m_isSavotage)
+            if(StaticVariableCollector.mainState == MainManager.MainState.Savotage)
             {
-               SetSavotage(false);
+                RemoveSavotage();
             }
-
         }
-        */
     }
 
     void Savotage()
     {
         m_mainManagerCache.Savotage();
+    }
+
+    void RemoveSavotage()
+    {
+        m_mainManagerCache.RemoveSavotage();
     }
 
 }

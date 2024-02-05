@@ -6,7 +6,6 @@ using static ReportController;
 
 public class ReportFactory : MonoBehaviour
 {
-    MainManager m_mainManagerCache;
     ReportController m_reportControllerCache;
 
     List<ReportData> m_fakeReportDataList = new List<ReportData>() {
@@ -18,7 +17,6 @@ public class ReportFactory : MonoBehaviour
 
     private void Awake()
     {
-        m_mainManagerCache = FindObjectOfType<MainManager>();
         m_reportControllerCache = FindObjectOfType<ReportController>(); 
     }
 
@@ -27,7 +25,7 @@ public class ReportFactory : MonoBehaviour
 
         for (int i = m_fakeReportDataList.Count - 1; i >= 0; i--)
         {
-            if (m_mainManagerCache.gameTime > m_fakeReportDataList[i].startDate)
+            if (StaticVariableCollector.gameTime > m_fakeReportDataList[i].startDate)
             {
                 m_reportControllerCache.AddReport(m_fakeReportDataList[i]);
                 m_fakeReportDataList.RemoveAt(i);

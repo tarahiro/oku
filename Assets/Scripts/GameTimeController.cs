@@ -11,6 +11,7 @@ public class GameTimeController : MonoBehaviour
 
     MainManager m_mainManagerCache;
     ReportFactory m_reportFactory;
+    Mental m_mental;
     [SerializeField] GameTimeView m_gameTimeView;
     [SerializeField] ReportController reportController;
 
@@ -18,6 +19,7 @@ public class GameTimeController : MonoBehaviour
     {
         m_mainManagerCache = FindObjectOfType<MainManager>();
         m_reportFactory = FindObjectOfType<ReportFactory>();
+        m_mental = FindObjectOfType<Mental>();
     }
 
     // Start is called before the first frame update
@@ -34,9 +36,14 @@ public class GameTimeController : MonoBehaviour
 
 
         //ステート依存の処理
-        switch (m_mainManagerCache.mainState)
+        switch (StaticVariableCollector.mainState)
         {
             case MainManager.MainState.None:
+                m_mainManagerCache.JudgeState();
+                break;
+
+            case MainManager.MainState.Rest:
+                m_mental.RestoreMental(ProgressTickCount);
                 m_mainManagerCache.JudgeState();
                 break;
 
@@ -44,13 +51,29 @@ public class GameTimeController : MonoBehaviour
                 reportController.ProgressReport(ProgressTickCount);
                 break;
 
+            case MainManager.MainState.Savotage:
+                m_mental.RestoreMental(ProgressTickCount);
+                break;
+
+            case MainManager.MainState.Exhausted:
+                m_mental.RestoreExhaust(ProgressTickCount);
+                break;
+
+
         }
+
+        CheckSituation();
     }
 
     void UpdateCommonGameTime()
     {
-        m_gameTimeView.UpdateTime(m_mainManagerCache.gameTime);
+        m_gameTimeView.UpdateTime(StaticVariableCollector.gameTime);
         m_reportFactory.ReportDataCheck();
+    }
+
+    void CheckSituation()
+    {
+        reportController.CheckDeadLine();
     }
   
 }

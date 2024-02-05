@@ -42,7 +42,7 @@ public class PcDisplayView : MonoBehaviour
         m_wordView.ProgressReport(currentTick, clearTick);
     }
 
-    public void Exaust(bool isExausted)
+    public void Exaust()
     {
         if (m_currentState != PcDisplayViewState.Exaust)
         {

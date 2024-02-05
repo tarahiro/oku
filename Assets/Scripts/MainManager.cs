@@ -5,16 +5,12 @@ using UnityEngine;
 
 public class MainManager : MonoBehaviour
 {
-    public MainState mainState { get; private set; }
-    public DateTime gameTime { get; private set; }
-
 
     [SerializeField] GameManager m_GameManger;
     [SerializeField]ReportController m_reportController;
     [SerializeField]PlayerControllerView m_playerControllerView;
     [SerializeField] PcDisplayView m_pcDisplayView;
 
-    bool m_isExausted;
 
     // Start is called before the first frame update
     void Start()
@@ -24,8 +20,7 @@ public class MainManager : MonoBehaviour
 
     private void OnEnable()
     {
-        mainState = MainState.Report;
-        m_isExausted = false;
+        StaticVariableCollector.SetMainState(MainState.None);
     }
 
     // Update is called once per frame
@@ -36,28 +31,19 @@ public class MainManager : MonoBehaviour
 
     public void SetGameTime(DateTime t_gameTime)
     {
-        gameTime = t_gameTime;
+        StaticVariableCollector.SetGameTime(t_gameTime);
     }
 
-    public bool SetSavotage(bool isSavotage)
+    public void Exaust()
     {
-        //何らかの理由でサボタージュ判定が変化できなかったらfalseを返す
-        if (m_isExausted)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        StaticVariableCollector.SetMainState(MainState.Exhausted);
+        m_playerControllerView.Exaust();
+        m_pcDisplayView.Exaust();
     }
 
-    public void SetExaust(bool isExaust)
+    public void RemoveExaust()
     {
-        m_isExausted = isExaust;
-        m_reportController.SetExaust(m_isExausted);
-        m_playerControllerView.SetExaust(m_isExausted);
-        m_pcDisplayView.Exaust(isExaust);
+        JudgeState();
     }
 
     public void GameOver()
@@ -67,22 +53,14 @@ public class MainManager : MonoBehaviour
 
     public void Savotage()
     {
-        if(mainState == MainState.Savotage)
-        {
-            EllegalStateInput();
-        }
+        StaticVariableCollector.SetMainState(MainState.Savotage);
         m_playerControllerView.Savotage();
         m_pcDisplayView.Savotage();
-        mainState = MainState.Savotage;
     }
 
     public void RemoveSavotage()
     {
-        if (mainState != MainState.Savotage)
-        {
-            EllegalStateInput();
-        }
-
+        JudgeState();
     }
 
     public void JudgeState()
@@ -94,20 +72,30 @@ public class MainManager : MonoBehaviour
         }
         else
         {
+            if(StaticVariableCollector.mainState != MainState.Rest)
+            {
             Rest();
+            }
         }
 
     }
 
     public void StartReport()
     {
+        StaticVariableCollector.SetMainState(MainState.Report);
         m_reportController.StartReport();
-        mainState = MainState.Report;
+        m_playerControllerView.StartReport();
+    }
+
+    public void ClearReport()
+    {
+        JudgeState();
     }
 
     public void Rest()
     {
-
+        StaticVariableCollector.SetMainState(MainState.Rest);
+        m_pcDisplayView.Rest();
     }
 
     public enum MainState
@@ -116,10 +104,7 @@ public class MainManager : MonoBehaviour
         Report,
         Savotage,
         Exhausted,
+        Rest
     }
 
-    void EllegalStateInput()
-    {
-        Debug.LogError("不正なステート入力です");
-    }
 }
