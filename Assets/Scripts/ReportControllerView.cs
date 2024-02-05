@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class ReportControllerView : MonoBehaviour
 {
-    const float merginY = 30f;
+    const float postitSizeY = .04f;
+    const float merginY = .02f;
 
     [SerializeField] ReportView reportViewPrefab;
 
@@ -32,8 +33,8 @@ public class ReportControllerView : MonoBehaviour
     {
         m_reportViewList.Add(Instantiate(reportViewPrefab, transform));
 
-        RectTransform addedReportTransform = m_reportViewList[m_reportViewList.Count - 1].GetComponent<RectTransform>();
-        addedReportTransform.localPosition = Vector3.down * (m_reportViewList.Count - 1)*(addedReportTransform.sizeDelta.y + merginY);
+        Transform addedReportTransform = m_reportViewList[m_reportViewList.Count - 1].transform;
+        addedReportTransform.localPosition = Vector3.down * (m_reportViewList.Count - 1)*(postitSizeY + merginY);
 
         m_reportViewList[m_reportViewList.Count - 1].InitializeReport(reportName, deadLine, color);
 

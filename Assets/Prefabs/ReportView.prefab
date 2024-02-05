@@ -208,8 +208,6 @@ MonoBehaviour:
   m_nameText: {fileID: 5415853639270607279}
   m_deadLineText: {fileID: 5415853639730586411}
   m_progressText: {fileID: 5415853639580008493}
-  m_colorImage: {fileID: 5415853638315965647}
-  m_gauge: {fileID: 2786273655640055478}
 --- !u!222 &5415853638315965646
 CanvasRenderer:
   m_ObjectHideFlags: 0

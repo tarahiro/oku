@@ -6,14 +6,10 @@ using UnityEngine.UI;
 
 public class PcDisplayView : MonoBehaviour
 {
-   const int c_reportProgressRow = 20;
-   const int c_reportProgressColumn = 25;
 
     [SerializeField] TextMeshProUGUI m_actionText;
-    [SerializeField] TextMeshProUGUI m_reportName;
-    [SerializeField] TextMeshProUGUI m_reportProgress;
     [SerializeField] TextMeshProUGUI m_reportEfficiencyText;
-    [SerializeField] GameObject m_reportObject;
+    [SerializeField] WordView m_wordView;
     [SerializeField] GameObject m_restObject;
     float m_reportEfficiencyTextDefaultSize;
     int m_reportEfficiencyLevel;
@@ -37,35 +33,11 @@ public class PcDisplayView : MonoBehaviour
         if (m_currentState != PcDisplayViewState.Report)
         {
             ResetState(PcDisplayViewState.Report);
-            m_reportObject.SetActive(true);
+            m_wordView.gameObject.SetActive(true);
         }
 
-        if (m_reportName.text != reportName)
-        {
-            m_actionText.text = reportName + " çÏã∆íÜ...";
-            m_reportName.text = reportName;
-        }
+        m_wordView.SetReport(reportName, currentTick, clearTick);
 
-        //Ç±Ç±ÇÕÉNÉâÉXï™ÇØÇΩï˚Ç™å„ÅXÇ¢Ç¢Ç©Ç‡
-        string s = "";
-        int reportProgressTextCount = c_reportProgressColumn * c_reportProgressRow * currentTick / clearTick;
-        int reportProgressColumn = reportProgressTextCount / c_reportProgressRow;
-        int reportProgressRow = reportProgressTextCount % c_reportProgressColumn;
-
-        for (int i = 0; i < reportProgressColumn; i++)
-        {
-            for (int j = 0; j < c_reportProgressRow; j++)
-            {
-                s += "Å¨";
-            }
-            s += "\n";
-        }
-        for (int j = 0; j < reportProgressRow; j++)
-        {
-            s += "Å¨";
-        }
-
-        m_reportProgress.text = s;
     }
 
     public void Exaust(bool isExausted)
@@ -135,6 +107,7 @@ public class PcDisplayView : MonoBehaviour
     {
         None = 0,
         Report,
+        ReportClear,
         Exaust,
         Savotage,
         Rest,
@@ -143,7 +116,7 @@ public class PcDisplayView : MonoBehaviour
     void ResetState(PcDisplayViewState pcDisplayViewState)
     {
         m_restObject.SetActive(false);
-        m_reportObject.SetActive(false);
+        m_wordView.gameObject.SetActive(false);
         m_currentState = pcDisplayViewState;
     }
 }

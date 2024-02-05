@@ -7,12 +7,15 @@ using UnityEngine.UI;
 
 public class ReportView : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI m_nameText;
-    [SerializeField] TextMeshProUGUI m_deadLineText;
-    [SerializeField] TextMeshProUGUI m_progressText;
-    [SerializeField] Image m_colorImage;
-    [SerializeField] Image m_gauge;
+    [SerializeField] TextMeshPro m_nameText;
+    [SerializeField] TextMeshPro m_deadLineText;
+    [SerializeField] TextMeshPro m_progressText;
 
+    //色は付箋の作成方法が固まってから再度検討
+    //[SerializeField] Image m_colorImage;
+    //ゲージは一旦削除。PC画面を見てやはり必要そうだったら再度追加するかも
+    //[SerializeField] Image m_gauge;
+   
 
 
     // Start is called before the first frame update
@@ -61,13 +64,14 @@ public class ReportView : MonoBehaviour
 
     void SetColor(Color color)
     {
-        m_colorImage.color = color;
+        //色は付箋の作成方法が固まってから再度検討
+        //m_colorImage.color = color;
     }
 
     void SetProgress(float progress)
     {
         m_progressText.text = "進捗" + ((int)(progress * 100)).ToString() + "%";
-        m_gauge.fillAmount = progress;
+        //m_gauge.fillAmount = progress;
     }
 
 
