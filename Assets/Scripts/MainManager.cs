@@ -1,10 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MainManager : MonoBehaviour
 {
-    MainState m_mainState;
+    public MainState mainState { get; private set; }
+    public DateTime gameTime { get; private set; }
+
+
     [SerializeField] GameManager m_GameManger;
     [SerializeField]ReportController m_reportController;
     [SerializeField]PlayerControllerView m_playerControllerView;
@@ -20,7 +24,7 @@ public class MainManager : MonoBehaviour
 
     private void OnEnable()
     {
-        m_mainState = MainState.Normal;
+        mainState = MainState.Report;
         m_isExausted = false;
     }
 
@@ -28,6 +32,11 @@ public class MainManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SetGameTime(DateTime t_gameTime)
+    {
+        gameTime = t_gameTime;
     }
 
     public bool SetSavotage(bool isSavotage)
@@ -39,9 +48,6 @@ public class MainManager : MonoBehaviour
         }
         else
         {
-            m_reportController.SetSavotage(isSavotage);
-            m_playerControllerView.SetSavotage(isSavotage);
-            m_pcDisplayView.Savotage(isSavotage);
             return true;
         }
     }
@@ -59,9 +65,61 @@ public class MainManager : MonoBehaviour
         m_GameManger.GameOver();
     }
 
-    enum MainState
+    public void Savotage()
+    {
+        if(mainState == MainState.Savotage)
+        {
+            EllegalStateInput();
+        }
+        m_playerControllerView.Savotage();
+        m_pcDisplayView.Savotage();
+        mainState = MainState.Savotage;
+    }
+
+    public void RemoveSavotage()
+    {
+        if (mainState != MainState.Savotage)
+        {
+            EllegalStateInput();
+        }
+
+    }
+
+    public void JudgeState()
+    {
+        //レポートがあるかないかを判定。あるならReport、ないならRestへステート遷移
+        if (m_reportController.IsReportExist())
+        {
+            StartReport();
+        }
+        else
+        {
+            Rest();
+        }
+
+    }
+
+    public void StartReport()
+    {
+        m_reportController.StartReport();
+        mainState = MainState.Report;
+    }
+
+    public void Rest()
+    {
+
+    }
+
+    public enum MainState
     {
         None,
-        Normal,
+        Report,
+        Savotage,
+        Exhausted,
+    }
+
+    void EllegalStateInput()
+    {
+        Debug.LogError("不正なステート入力です");
     }
 }

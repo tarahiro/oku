@@ -20,16 +20,9 @@ public class PlayerControllerView : MonoBehaviour
         
     }
 
-    public void SetSavotage(bool isSavotage)
+    public void Savotage()
     {
-        if (isSavotage)
-        {
-            m_savotageText.text = "サボり中";
-        }
-        else
-        {
-            m_savotageText.text = "Z : サボる";
-        }
+        m_savotageText.text = "サボり中";
     }
 
     public void SetExaust(bool isExaust)

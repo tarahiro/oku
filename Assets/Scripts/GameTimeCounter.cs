@@ -5,13 +5,18 @@ using UnityEngine;
 
 public class GameTimeCounter : MonoBehaviour
 {
-    DateTime m_dateTime;
     const int TickSecond = 3600;
     // ÉQÅ[ÉÄê¢äEÇÃ1ïb = åªé¿ê¢äEÇÃ1ïb * TImeRatio
     const float TimeRatio = 36000f;
     float m_residueTime = 0;
 
+    MainManager m_mainManagerCache;
     GameTimeController m_GameTimeControllerCache;
+
+    private void Awake()
+    {
+        m_mainManagerCache = FindObjectOfType<MainManager>();
+    }
 
     public void Set(DateTime time, GameTimeController gameTimeContoller)
     {
@@ -29,7 +34,7 @@ public class GameTimeCounter : MonoBehaviour
             int TickCount = (int)m_residueTime / TickSecond;
 
             //çXêVèàóù
-            UpdateDateTime(new DateTime(m_dateTime.Ticks + TimeSpan.TicksPerSecond * TickSecond * TickCount),TickCount);
+            UpdateDateTime(new DateTime(m_mainManagerCache.gameTime.Ticks + TimeSpan.TicksPerSecond * TickSecond * TickCount),TickCount);
 
             m_residueTime -= TickSecond * TickCount;
         }
@@ -38,7 +43,7 @@ public class GameTimeCounter : MonoBehaviour
 
     void UpdateDateTime(DateTime dateTime,int progressTickCount)
     {
-        m_dateTime = dateTime;
-        m_GameTimeControllerCache.UpdateDateTime(m_dateTime,progressTickCount);
+        m_mainManagerCache.SetGameTime(dateTime);
+        m_GameTimeControllerCache.UpdateDateTime(progressTickCount);
     }
 }

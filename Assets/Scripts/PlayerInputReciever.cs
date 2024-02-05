@@ -6,36 +6,37 @@ public class PlayerInputReciever : MonoBehaviour
 {
     MainManager m_mainManagerCache;
     PlayerControllerView m_controllerView;
-    bool m_isSavotage;
 
     private void OnEnable()
     {
         m_mainManagerCache = GameObject.FindObjectOfType<MainManager>();
-        SetSavotage(false);
+        //SetSavotage(false);
     }
 
     private void Update()
     {
         if (Input.GetKey(KeyCode.Z))
         {
-            if(!m_isSavotage)
+            if (m_mainManagerCache.mainState != MainManager.MainState.Savotage)
             {
-                SetSavotage(true);
+                Savotage();
             }
         }
+        /*
         else
         {
             if (m_isSavotage)
             {
-                SetSavotage(false);
+               SetSavotage(false);
             }
 
         }
+        */
     }
 
-    void SetSavotage(bool isSavotage)
+    void Savotage()
     {
-        if (m_mainManagerCache.SetSavotage(isSavotage)) m_isSavotage = isSavotage;
+        m_mainManagerCache.Savotage();
     }
 
 }

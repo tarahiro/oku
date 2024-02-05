@@ -28,16 +28,18 @@ public class PcDisplayView : MonoBehaviour
 
     }
 
-    public void SetReport(string reportName, int currentTick, int clearTick)
+    public void StartReport(string reportName, int currentTick, int clearTick)
     {
-        if (m_currentState != PcDisplayViewState.Report)
-        {
             ResetState(PcDisplayViewState.Report);
             m_wordView.gameObject.SetActive(true);
-        }
 
-        m_wordView.SetReport(reportName, currentTick, clearTick);
+        m_wordView.StartReport(reportName, currentTick, clearTick);
 
+    }
+
+    public void ProgressReport(int currentTick, int clearTick)
+    {
+        m_wordView.ProgressReport(currentTick, clearTick);
     }
 
     public void Exaust(bool isExausted)
@@ -49,7 +51,7 @@ public class PcDisplayView : MonoBehaviour
         }
     }
 
-    public void Savotage(bool isSavotage)
+    public void Savotage()
     {
         if (m_currentState != PcDisplayViewState.Savotage)
         {
@@ -118,5 +120,9 @@ public class PcDisplayView : MonoBehaviour
         m_restObject.SetActive(false);
         m_wordView.gameObject.SetActive(false);
         m_currentState = pcDisplayViewState;
+    }
+    void EllegalStateInput()
+    {
+        Debug.LogError("不正なステート入力です");
     }
 }

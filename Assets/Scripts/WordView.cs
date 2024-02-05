@@ -10,13 +10,16 @@ public class WordView : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI m_reportName;
     [SerializeField] TextMeshProUGUI m_reportProgress;
-    public void SetReport(string reportName, int currentTick, int clearTick)
-    {
 
-        if (m_reportName.text != reportName)
-        {
-            m_reportName.text = reportName;
-        }
+    public void StartReport(string reportName, int currentTick, int clearTick)
+    {
+        m_reportName.text = reportName;
+
+        ProgressReport(currentTick, clearTick);
+    }
+
+    public void ProgressReport(int currentTick, int clearTick)
+    {
 
         //Ç±Ç±ÇÕÉNÉâÉXï™ÇØÇΩï˚Ç™å„ÅXÇ¢Ç¢Ç©Ç‡
         string s = "";

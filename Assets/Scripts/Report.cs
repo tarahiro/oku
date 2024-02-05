@@ -49,10 +49,15 @@ public class Report : MonoBehaviour
         Destroy(this);
     }
 
+    public void StartReport()
+    {
+        pcDisplayViewCache.StartReport(m_reportName, m_currentTick, m_clearTick);
+    }
+
     public bool IsClearReport(DateTime NowGameTime, int ProgressTickCount)
     {
         m_currentTick += ProgressTickCount;
-        pcDisplayViewCache.SetReport(m_reportName, m_currentTick, m_clearTick);
+        pcDisplayViewCache.ProgressReport(m_currentTick, m_clearTick);
         reportViewCache.UpdateReportView(m_currentTick, m_clearTick);
         return m_currentTick >= m_clearTick;
     }
