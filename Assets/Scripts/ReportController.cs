@@ -93,7 +93,6 @@ public class ReportController : MonoBehaviour
         m_reportList[0].Clear();
         m_reportList.RemoveAt(0);
         m_view.Clear();
-        m_pcDisplayView.ClearReport();
         m_mainManager.ClearReport();
     }
 

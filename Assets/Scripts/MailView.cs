@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class MailView : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] TextMeshProUGUI m_mailTitle;
+
+    const float c_sendMailTime = 2f;
+    float m_currentTime = 0;
+
+    private void Update()
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetMail(string reportName)
     {
-        
+        m_currentTime = 0;
+        m_mailTitle.text = reportName + "\nŠ®—¹I";
+    }
+
+    public bool IsEndMail()
+    {
+        m_currentTime += Time.deltaTime;
+        return m_currentTime >= c_sendMailTime;
     }
 }

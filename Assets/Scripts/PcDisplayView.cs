@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,10 +11,14 @@ public class PcDisplayView : MonoBehaviour
     [SerializeField] TextMeshProUGUI m_actionText;
     [SerializeField] TextMeshProUGUI m_reportEfficiencyText;
     [SerializeField] WordView m_wordView;
+    [SerializeField] MailView m_mailView;
     [SerializeField] GameObject m_restObject;
     float m_reportEfficiencyTextDefaultSize;
     int m_reportEfficiencyLevel;
     PcDisplayViewState m_currentState;
+
+    Action<int, int> StuckStartReport;
+    Action StuckAction;
 
     // Start is called before the first frame update
     void Start()
@@ -25,35 +30,63 @@ public class PcDisplayView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(m_currentState == PcDisplayViewState.Mail)
+        {
+            if (m_mailView.IsEndMail())
+            {
+                StuckAction.Invoke();
+            }
+        }
     }
 
-    public void StartReport(string reportName, int currentTick, int clearTick)
+    public void StartReport(string reportName, int currentTick, int clearTick,bool isStuck = false)
     {
+        if (m_currentState == PcDisplayViewState.Mail && !isStuck)
+        {
+            StuckStartReport = (i, j) => StartReport(reportName, i, j,true);
+            StuckAction = () => StuckStartReport(currentTick, clearTick);
+        }
+        else
+        {
             ResetState(PcDisplayViewState.Report);
             m_wordView.gameObject.SetActive(true);
-
-        m_wordView.StartReport(reportName, currentTick, clearTick);
+            m_wordView.StartReport(reportName, currentTick, clearTick);
+        }
 
     }
 
-    public void ProgressReport(int currentTick, int clearTick)
+    public void ProgressReport(int currentTick, int clearTick, bool isStuck = false)
     {
-        m_wordView.ProgressReport(currentTick, clearTick);
+        if (m_currentState == PcDisplayViewState.Mail && !isStuck)
+        {
+            StuckAction = () => StuckStartReport(currentTick, clearTick);
+        }
+        else
+        {
+           m_wordView.ProgressReport(currentTick, clearTick);
+        }
     }
 
-    public void Exaust()
+    public void Exaust(bool isStuck = false)
     {
-        if (m_currentState != PcDisplayViewState.Exaust)
+        if (m_currentState == PcDisplayViewState.Mail && !isStuck)
+        {
+            StuckAction = () => Exaust(true);
+        }
+        else
         {
             ResetState(PcDisplayViewState.Exaust);
             m_actionText.text = "Ç¬Ç©ÇÍÇÕÇƒÇƒÅ@Ç§Ç≤ÇØÇ»Ç¢ÅI";
         }
     }
 
-    public void Savotage()
+    public void Savotage(bool isStuck = false)
     {
-        if (m_currentState != PcDisplayViewState.Savotage)
+        if (m_currentState == PcDisplayViewState.Mail && !isStuck)
+        {
+            StuckAction = () => Savotage(true);
+        }
+        else
         {
             ResetState(PcDisplayViewState.Savotage);
             m_restObject.SetActive(true);
@@ -61,25 +94,29 @@ public class PcDisplayView : MonoBehaviour
         }
     }
 
-    public void Rest()
-    {
-        if (m_currentState != PcDisplayViewState.Rest)
+    public void Rest(bool isStuck = false)
         {
-            ResetState(PcDisplayViewState.Rest);
-            m_restObject.SetActive(true);
-            m_actionText.text = "ãxåeíÜ...";
-        }
+            if (m_currentState == PcDisplayViewState.Mail && !isStuck)
+            {
+                StuckAction = () => Rest(true);
+            }
+            else
+            {
+                ResetState(PcDisplayViewState.Rest);
+                m_restObject.SetActive(true);
+                m_actionText.text = "ãxåeíÜ...";
+            }
     }
 
-    public void ClearReport()
+    public void ClearReport(string reportName)
     {
         //ÉåÉ|Å[ÉgèIóπÇµÇΩÇÁãxåeÇ∆ìØã`
 
         if (m_currentState != PcDisplayViewState.Rest)
         {
-            ResetState(PcDisplayViewState.Rest);
-            m_restObject.SetActive(true);
-            m_actionText.text = "";
+            ResetState(PcDisplayViewState.Mail);
+            m_mailView.gameObject.SetActive(true);
+            m_mailView.SetMail(reportName);
         }
     }
 
@@ -109,7 +146,7 @@ public class PcDisplayView : MonoBehaviour
     {
         None = 0,
         Report,
-        ReportClear,
+        Mail,
         Exaust,
         Savotage,
         Rest,
@@ -117,8 +154,10 @@ public class PcDisplayView : MonoBehaviour
 
     void ResetState(PcDisplayViewState pcDisplayViewState)
     {
+        if (m_currentState == pcDisplayViewState) EllegalStateInput();
         m_restObject.SetActive(false);
         m_wordView.gameObject.SetActive(false);
+        m_mailView.gameObject.SetActive(false);
         m_currentState = pcDisplayViewState;
     }
     void EllegalStateInput()

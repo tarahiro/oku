@@ -46,6 +46,7 @@ public class Report : MonoBehaviour
     public void Clear()
     {
         reportViewCache.Clear();
+        pcDisplayViewCache.ClearReport(m_reportName);
         Destroy(this);
     }
 
