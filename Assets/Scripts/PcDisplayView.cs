@@ -8,13 +8,9 @@ using UnityEngine.UI;
 public class PcDisplayView : MonoBehaviour
 {
 
-    [SerializeField] TextMeshProUGUI m_actionText;
-    [SerializeField] TextMeshProUGUI m_reportEfficiencyText;
     [SerializeField] WordView m_wordView;
     [SerializeField] MailView m_mailView;
     [SerializeField] GameObject m_restObject;
-    float m_reportEfficiencyTextDefaultSize;
-    int m_reportEfficiencyLevel;
     PcDisplayViewState m_currentState;
 
     Action<int, int> StuckStartReport;
@@ -24,7 +20,6 @@ public class PcDisplayView : MonoBehaviour
     void Start()
     {
         m_currentState = PcDisplayViewState.None;
-        m_reportEfficiencyTextDefaultSize = m_reportEfficiencyText.fontSize;
     }
 
     // Update is called once per frame
@@ -76,7 +71,6 @@ public class PcDisplayView : MonoBehaviour
         else
         {
             ResetState(PcDisplayViewState.Exaust);
-            m_actionText.text = "つかれはてて　うごけない！";
         }
     }
 
@@ -90,7 +84,6 @@ public class PcDisplayView : MonoBehaviour
         {
             ResetState(PcDisplayViewState.Savotage);
             m_restObject.SetActive(true);
-            m_actionText.text = "サボり中...";
         }
     }
 
@@ -104,7 +97,6 @@ public class PcDisplayView : MonoBehaviour
             {
                 ResetState(PcDisplayViewState.Rest);
                 m_restObject.SetActive(true);
-                m_actionText.text = "休憩中...";
             }
     }
 
@@ -120,27 +112,6 @@ public class PcDisplayView : MonoBehaviour
         }
     }
 
-    public void SetReportEfficiencyLevel(int level)
-    {
-        m_reportEfficiencyLevel = level;
-        switch (m_reportEfficiencyLevel)
-        {
-            default:
-            case 0:
-                m_reportEfficiencyText.text = "";
-                break;
-
-            case 1:
-                m_reportEfficiencyText.text = "締め切り間近で\nレポート効率2倍！";
-                break;
-
-            case 2:
-                m_reportEfficiencyText.text = "締め切り超間近で\nレポート効率3倍！";
-                m_reportEfficiencyText.fontSize = m_reportEfficiencyTextDefaultSize * 1.5f;
-                break;
-
-        }
-    }
 
     enum PcDisplayViewState
     {

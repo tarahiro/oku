@@ -72,9 +72,9 @@ public class MainManager : MonoBehaviour
         }
         else
         {
-            if(StaticVariableCollector.mainState != MainState.Rest)
+            if (StaticVariableCollector.mainState != MainState.Rest)
             {
-            Rest();
+                Rest();
             }
         }
 

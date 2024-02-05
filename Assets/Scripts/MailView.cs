@@ -7,7 +7,7 @@ public class MailView : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI m_mailTitle;
 
-    const float c_sendMailTime = 2f;
+    const float c_sendMailTime = 1.3f;
     float m_currentTime = 0;
 
     private void Update()

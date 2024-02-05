@@ -20,6 +20,7 @@ public class ReportController : MonoBehaviour
 
     [SerializeField] MainManager m_mainManager;
     [SerializeField] ReportControllerView m_view;
+    [SerializeField] LevelView m_levelView;
     [SerializeField] PcDisplayView m_pcDisplayView;
     [SerializeField] Mental m_mental;
 
@@ -121,7 +122,7 @@ public class ReportController : MonoBehaviour
         m_currentLevel = level;
         if (!m_isExausted)
         {
-            m_pcDisplayView.SetReportEfficiencyLevel(m_currentLevel);
+            m_levelView.SetReportEfficiencyLevel(m_currentLevel);
         }
     }
 
