@@ -20,12 +20,10 @@ public class WordView : MonoBehaviour
 
     public void ProgressReport(int currentTick, int clearTick)
     {
-
-        //Ç±Ç±ÇÕÉNÉâÉXï™ÇØÇΩï˚Ç™å„ÅXÇ¢Ç¢Ç©Ç‡
         string s = "";
         int reportProgressTextCount = c_reportProgressColumn * c_reportProgressRow * currentTick / clearTick;
         int reportProgressColumn = reportProgressTextCount / c_reportProgressRow;
-        int reportProgressRow = reportProgressTextCount % c_reportProgressColumn;
+        int reportProgressRow = reportProgressTextCount % c_reportProgressRow;
 
         for (int i = 0; i < reportProgressColumn; i++)
         {

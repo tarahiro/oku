@@ -22,11 +22,11 @@ public class LevelView : MonoBehaviour
                 break;
 
             case 1:
-                m_reportEfficiencyText.text = "締め切り間近で\nレポート効率2倍！";
+                m_reportEfficiencyText.text = "締め切り間近でレポート効率2倍！";
                 break;
 
             case 2:
-                m_reportEfficiencyText.text = "締め切り超間近で\nレポート効率3倍！";
+                m_reportEfficiencyText.text = "締め切り超間近でレポート効率3倍！";
                 m_reportEfficiencyText.fontSize = m_reportEfficiencyTextDefaultSize * 1.5f;
                 break;
 

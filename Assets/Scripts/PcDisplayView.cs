@@ -13,8 +13,7 @@ public class PcDisplayView : MonoBehaviour
     [SerializeField] GameObject m_restObject;
     PcDisplayViewState m_currentState;
 
-    Action<int, int> StuckStartReport;
-    Action StuckAction;
+    bool m_isMailing = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,91 +24,50 @@ public class PcDisplayView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(m_currentState == PcDisplayViewState.Mail)
+        if(m_isMailing)
         {
             if (m_mailView.IsEndMail())
             {
-                StuckAction.Invoke();
+                EndMail();
             }
         }
     }
 
-    public void StartReport(string reportName, int currentTick, int clearTick,bool isStuck = false)
+    public void StartReport(string reportName, int currentTick, int clearTick)
     {
-        if (m_currentState == PcDisplayViewState.Mail && !isStuck)
-        {
-            StuckStartReport = (i, j) => StartReport(reportName, i, j,true);
-            StuckAction = () => StuckStartReport(currentTick, clearTick);
-        }
-        else
-        {
-            ResetState(PcDisplayViewState.Report);
-            m_wordView.gameObject.SetActive(true);
-            m_wordView.StartReport(reportName, currentTick, clearTick);
-        }
+        ResetState(PcDisplayViewState.Report);
+        m_wordView.gameObject.SetActive(true);
+        m_wordView.StartReport(reportName, currentTick, clearTick);
 
     }
 
-    public void ProgressReport(int currentTick, int clearTick, bool isStuck = false)
+    public void ProgressReport(int currentTick, int clearTick)
     {
-        if (m_currentState == PcDisplayViewState.Mail && !isStuck)
-        {
-            StuckAction = () => StuckStartReport(currentTick, clearTick);
-        }
-        else
-        {
            m_wordView.ProgressReport(currentTick, clearTick);
-        }
     }
 
-    public void Exaust(bool isStuck = false)
+    public void Exaust()
     {
-        if (m_currentState == PcDisplayViewState.Mail && !isStuck)
-        {
-            StuckAction = () => Exaust(true);
-        }
-        else
-        {
             ResetState(PcDisplayViewState.Exaust);
-        }
     }
 
-    public void Savotage(bool isStuck = false)
+    public void Savotage()
     {
-        if (m_currentState == PcDisplayViewState.Mail && !isStuck)
-        {
-            StuckAction = () => Savotage(true);
-        }
-        else
-        {
             ResetState(PcDisplayViewState.Savotage);
             m_restObject.SetActive(true);
-        }
     }
 
-    public void Rest(bool isStuck = false)
-        {
-            if (m_currentState == PcDisplayViewState.Mail && !isStuck)
-            {
-                StuckAction = () => Rest(true);
-            }
-            else
-            {
-                ResetState(PcDisplayViewState.Rest);
-                m_restObject.SetActive(true);
-            }
+    public void Rest()
+    {
+        ResetState(PcDisplayViewState.Rest);
+        m_restObject.SetActive(true);
     }
 
     public void ClearReport(string reportName)
     {
-        //レポート終了したら休憩と同義
-
-        if (m_currentState != PcDisplayViewState.Rest)
-        {
-            ResetState(PcDisplayViewState.Mail);
-            m_mailView.gameObject.SetActive(true);
-            m_mailView.SetMail(reportName);
-        }
+        m_mailView.gameObject.SetActive(true);
+        m_mailView.SetMail(reportName);
+        m_isMailing = true;
     }
 
 
@@ -117,7 +75,6 @@ public class PcDisplayView : MonoBehaviour
     {
         None = 0,
         Report,
-        Mail,
         Exaust,
         Savotage,
         Rest,
@@ -128,9 +85,15 @@ public class PcDisplayView : MonoBehaviour
         if (m_currentState == pcDisplayViewState) EllegalStateInput();
         m_restObject.SetActive(false);
         m_wordView.gameObject.SetActive(false);
-        m_mailView.gameObject.SetActive(false);
         m_currentState = pcDisplayViewState;
     }
+
+    void EndMail()
+    {
+        m_mailView.gameObject.SetActive(false);
+        m_isMailing = false;
+    }
+
     void EllegalStateInput()
     {
         Debug.LogError("不正なステート入力です");

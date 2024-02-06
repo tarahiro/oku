@@ -48,7 +48,7 @@ public class ReportController : MonoBehaviour
     public void ProgressReport(int ProgressTickCount)
     {
         //レベル判定
-        SetEfficiencyLevel(JudgeLevel(StaticVariableCollector.gameTime));
+        SetEfficiencyLevel(JudgeLevel());
 
         if (m_reportList[0].IsClearReport(StaticVariableCollector.gameTime, ProgressTickCount * c_reportEfficiency[m_currentLevel]))
         {
@@ -80,6 +80,7 @@ public class ReportController : MonoBehaviour
     public void StartReport()
     {
         m_reportList[0].StartReport();
+        SetEfficiencyLevel(JudgeLevel());
     }
 
     public void AddReport(ReportData reportData)
@@ -94,10 +95,11 @@ public class ReportController : MonoBehaviour
         m_reportList[0].Clear();
         m_reportList.RemoveAt(0);
         m_view.Clear();
+        m_levelView.SetReportEfficiencyLevel(0);
         m_mainManager.ClearReport();
     }
 
-    int JudgeLevel(DateTime NowGameTime)
+    int JudgeLevel()
     {
         //サボり中ならレベル0
         if (StaticVariableCollector.mainState == MainManager.MainState.Savotage) return 0;
@@ -108,7 +110,7 @@ public class ReportController : MonoBehaviour
         //作成中レポートの締め切りと今の時間を照合してレベル判定
         for (int i = 0; i < c_timeSpanOfReportEfficiency.Count; i++)
         {
-            if (m_reportList[0].calculateDeadLine - NowGameTime < c_timeSpanOfReportEfficiency[i])
+            if (m_reportList[0].calculateDeadLine - StaticVariableCollector.gameTime< c_timeSpanOfReportEfficiency[i])
             {
                 return c_timeSpanOfReportEfficiency.Count - i;
             }
