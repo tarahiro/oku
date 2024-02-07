@@ -24,16 +24,16 @@ public class PlayerInputReciever : MonoBehaviour
 
     private void Awake()
     {
-        tTouchState = new TTouchState();
+        tTouchState = new TTouchState(null);
     }
 
     private void FixedUpdate()
     {
         raycastReciever = null;
-        tTouchState = new TTouchState();
+        StaticVariableCollector.SetMousePosition(Input.mousePosition);
 
         //ƒXƒ}ƒz‘Î‰ž‚·‚éŽž‚É•Ï‚¦‚é
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(StaticVariableCollector.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 100)) {
@@ -51,6 +51,7 @@ public class PlayerInputReciever : MonoBehaviour
         m_keyDownKeyList = m_useKeyList.FindAll(x => Input.GetKeyDown(x));
         m_keyInKeyList = m_useKeyList.FindAll(x => Input.GetKey(x));
         m_keyUpKeyList = m_useKeyList.FindAll(x => Input.GetKeyUp(x));
+        tTouchState = new TTouchState(tTouchState);
     }
 
     public void RayCastExecute()
@@ -64,11 +65,29 @@ public class PlayerInputReciever : MonoBehaviour
         public bool IsTouchIn;
         public bool IsTouchUp;
 
-        public TTouchState()
+        public TTouchState(TTouchState m_prevTouchState)
         {
-            IsTouchDown = Input.GetKeyDown(KeyCode.Mouse0);
-            IsTouchIn = Input.GetKey(KeyCode.Mouse0);
-            IsTouchUp = Input.GetKeyUp(KeyCode.Mouse0);
+            if(m_prevTouchState == null)
+            {
+                IsTouchDown = false;
+                IsTouchIn = false;
+                IsTouchUp = false;
+            }
+            else
+            {
+                if (!IsTouchIn)
+                {
+                    IsTouchDown = Input.GetMouseButton(0);
+                    IsTouchIn = Input.GetMouseButton(0);
+                    IsTouchUp = false;
+                }
+                else
+                {
+                    IsTouchDown = false;
+                    IsTouchIn = Input.GetMouseButton(0);
+                    IsTouchUp = Input.GetMouseButton(0);
+                }
+            }
         }
     }
 }

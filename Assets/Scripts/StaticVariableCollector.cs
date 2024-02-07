@@ -9,6 +9,8 @@ public static class StaticVariableCollector
 
     public static DateTime gameTime { get; private set; }
 
+    public static Vector3 mousePosition { get; private set; }
+
     public static void SetMainState(MainManager.MainState t_mainState)
     {
         if(mainState == t_mainState)
@@ -21,6 +23,11 @@ public static class StaticVariableCollector
     public static void SetGameTime(DateTime t_gameTime)
     {
         gameTime = t_gameTime;
+    }
+
+    public static void SetMousePosition(Vector3 t_mousePosition)
+    {
+        mousePosition = t_mousePosition;
     }
 
     static void EllegalStateInput()
