@@ -46,4 +46,12 @@ public class GameTimeCounter : MonoBehaviour
         m_mainManagerCache.SetGameTime(dateTime);
         m_GameTimeControllerCache.UpdateDateTime(progressTickCount);
     }
+
+    public void GoToNextDay()
+    {
+        DateTime d = new DateTime(StaticVariableCollector.gameTime.Year, StaticVariableCollector.gameTime.Month, StaticVariableCollector.gameTime.Day+1);
+        TimeSpan t = d - StaticVariableCollector.gameTime;
+        int progressTickCount = (int)t.TotalSeconds / TickSecond;
+        UpdateDateTime(d, progressTickCount);
+    }
 }

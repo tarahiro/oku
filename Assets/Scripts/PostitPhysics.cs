@@ -26,6 +26,12 @@ public class PostitPhysics : MonoBehaviour, IRaycastReciever
         state = ReportControllerView.PostitPhysicsState.Moving;
     }
 
+    public void Standby(Vector3 localPosition)
+    {
+        SetPosition(localPosition);
+        state = ReportControllerView.PostitPhysicsState.Standby;
+    }
+
 
     public void SetPosition (Vector3 localPosition)
     {

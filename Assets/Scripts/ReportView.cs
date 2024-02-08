@@ -46,7 +46,7 @@ public class ReportView : MonoBehaviour
 
     public void Clear()
     {
-        Destroy(gameObject); ;
+        Destroy(gameObject);
     }
 
 

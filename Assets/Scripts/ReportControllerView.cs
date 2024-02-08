@@ -39,7 +39,7 @@ public class ReportControllerView : MonoBehaviour
                     }
                     else
                     {
-                        //TODO ‘¼‚É“®‚¢‚Ä‚¢‚é‚à‚Ì‚ª‚ ‚ê‚ÎA‚»‚ê‚ÆŒðŠ·
+                        SwitchReport(m_reportViewList.First(x => x.postitPhysics.state == PostitPhysicsState.Moving).postitPhysics, postitPhysics);
                     }
                     break;
             }
@@ -50,14 +50,29 @@ public class ReportControllerView : MonoBehaviour
         }
     }
 
+    public void ReflectMouseInput()
+    {
+        for (int i = 0; i < m_reportViewList.Count; i++)
+        {
+            switch (m_reportViewList[i].postitPhysics.state)
+            {
+                case PostitPhysicsState.Moving:
+                    if (StaticVariableCollector.tTouchState.IsTouchIn)
+                    {
+                        m_reportViewList[i].postitPhysics.SetPositionFromRaycast(m_raycastPoint);
+                    }
+                    else if (StaticVariableCollector.tTouchState.IsTouchUp)
+                    {
+                        m_reportViewList[i].postitPhysics.Standby(PostitNewtralLocalPosition(i));
+                    }
+                    break;
+            }
+        }
+    }
+
     public void SetRaycastPointOnPlane(Vector3 raycastPoint)
     {
-        Debug.Log("a");
         m_raycastPoint = raycastPoint;
-        foreach (ReportView p in m_reportViewList.FindAll(x => x.postitPhysics.state == PostitPhysicsState.Moving))
-        {
-            p.postitPhysics.SetPositionFromRaycast(raycastPoint);
-        }
     }
 
     public ReportView AddReport(string reportName, DateTime deadLine, Color color)
@@ -69,6 +84,30 @@ public class ReportControllerView : MonoBehaviour
         return m_reportViewList[m_reportViewList.Count - 1];
     }
 
+    public void SwitchReport(PostitPhysics movingPostit, PostitPhysics standbyPostit)
+    {
+        for(int i = 0; i < m_reportViewList.Count;i++)
+        {
+            if (m_reportViewList[i].postitPhysics == movingPostit)
+            {
+                for (int j = 0; j < m_reportViewList.Count; j++)
+                {
+                    if (m_reportViewList[j].postitPhysics == standbyPostit)
+                    {
+                        ReportView t_reportView = m_reportViewList[j];
+                        m_reportViewList[j] = m_reportViewList[i];
+                        m_reportViewList[j].postitPhysics.Standby(PostitNewtralLocalPosition(j));
+
+                        m_reportViewList[i] = t_reportView;
+                        m_reportViewList[i].postitPhysics.Standby(PostitNewtralLocalPosition(i));
+
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public enum PostitPhysicsState
     {
         None,
@@ -78,12 +117,13 @@ public class ReportControllerView : MonoBehaviour
 
     Vector3 PostitNewtralLocalPosition(int reportCountId)
     {
-        return Vector3.down * (m_reportViewList.Count - 1) * (postitSizeY + merginY);
+        return Vector3.down * reportCountId * (postitSizeY + merginY);
     }
 
 
     public void Clear()
     {
+
         m_reportViewList.RemoveAt(0);
     }
 }

@@ -11,7 +11,7 @@ public class PlayerInputReciever : MonoBehaviour
     {
         KeyCode.Z,
         KeyCode.Escape,
-        KeyCode.Mouse0
+        KeyCode.Tab
     };
 
     PlayerControllerView m_controllerView;
@@ -21,6 +21,8 @@ public class PlayerInputReciever : MonoBehaviour
     public List<KeyCode> m_keyDownKeyList { get; private set; }
     public List<KeyCode> m_keyInKeyList { get; private set; }
     public List<KeyCode> m_keyUpKeyList { get; private set; }
+
+    public bool isFixedUpdated { get; private set; }
 
     private void Awake()
     {
@@ -33,13 +35,21 @@ public class PlayerInputReciever : MonoBehaviour
 
         //ƒXƒ}ƒz‘Î‰ž‚·‚éŽž‚É•Ï‚¦‚é
         Ray ray = Camera.main.ScreenPointToRay(StaticVariableCollector.mousePosition);
-        m_raycastHitList = Physics.RaycastAll(ray, 100f).ToList();
+        if (Physics.Raycast(ray))
+        {
+            m_raycastHitList = Physics.RaycastAll(ray, 100f).ToList();
+        }
+        else
+        {
+            m_raycastHitList = null;
+        }
+
+        isFixedUpdated = false;
     }
 
 
     public void RecieveKeyInput()
     {
-        StaticVariableCollector.SetTTouchState(new TTouchState(StaticVariableCollector.tTouchState));
         m_keyDownKeyList = m_useKeyList.FindAll(x => Input.GetKeyDown(x));
         m_keyInKeyList = m_useKeyList.FindAll(x => Input.GetKey(x));
         m_keyUpKeyList = m_useKeyList.FindAll(x => Input.GetKeyUp(x));
@@ -47,11 +57,14 @@ public class PlayerInputReciever : MonoBehaviour
 
     public void RayCastExecute()
     {
+        StaticVariableCollector.SetTTouchState(new TTouchState(StaticVariableCollector.tTouchState));
+
         if (m_raycastHitList != null)
         {
             //—Dæ‚µ‚Äˆ—‚·‚é‚à‚Ì‚ð‘Î‰ž
             for (int i = m_raycastHitList.Count - 1; i >= 0; i--)
             {
+                Debug.Log(m_raycastHitList[i]);
                 if (m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>() != null)
                 {
                     m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>().SetRaycastPoint(m_raycastHitList[i].point);
@@ -69,6 +82,8 @@ public class PlayerInputReciever : MonoBehaviour
                 }
             }
         }
+
+        isFixedUpdated = true;
     }
 
     public class TTouchState
@@ -79,7 +94,6 @@ public class PlayerInputReciever : MonoBehaviour
 
         public TTouchState(TTouchState m_prevTouchState)
         {
-            if (Input.GetMouseButton(0)) Debug.Log("MouseButtonIn");
             if(m_prevTouchState == null)
             {
                 IsTouchDown = false;
