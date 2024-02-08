@@ -15,7 +15,8 @@ public class PlayerInputReciever : MonoBehaviour
 
     PlayerControllerView m_controllerView;
 
-    IRaycastReciever raycastReciever = null;
+    List<RaycastHit> m_raycastHitList;
+    
     TTouchState tTouchState;
 
     public List<KeyCode> m_keyDownKeyList { get; private set; }
@@ -29,20 +30,12 @@ public class PlayerInputReciever : MonoBehaviour
 
     private void FixedUpdate()
     {
-        raycastReciever = null;
         StaticVariableCollector.SetMousePosition(Input.mousePosition);
+        
 
         //スマホ対応する時に変える
         Ray ray = Camera.main.ScreenPointToRay(StaticVariableCollector.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100)) {
-            if (hit.transform.GetComponent<IRaycastReciever>() != null)
-            {
-                raycastReciever = hit.transform.GetComponent<IRaycastReciever>();
-            }
-        }
-
+        m_raycastHitList = Physics.RaycastAll(ray, 100f).ToList();
     }
 
 
@@ -56,7 +49,25 @@ public class PlayerInputReciever : MonoBehaviour
 
     public void RayCastExecute()
     {
-        if(raycastReciever != null) raycastReciever.RaycastAct(tTouchState);
+        //優先して処理するものを対応
+        for(int i = m_raycastHitList.Count - 1;i >= 0; i--)
+        {
+            if (m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>() != null)
+            {
+                m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>().SetRaycastPoint(m_raycastHitList[i].point);
+                //パフォーマンスのため削除
+                m_raycastHitList.RemoveAt(i);
+            }
+        }
+
+        //その他の処理
+        for (int i = m_raycastHitList.Count - 1; i >= 0; i--)
+        {
+            if (m_raycastHitList[i].transform.GetComponent<IRaycastReciever>() != null)
+            {
+                m_raycastHitList[i].transform.GetComponent<IRaycastReciever>().RaycastAct(tTouchState);
+            }
+        }
     }
 
     public class TTouchState

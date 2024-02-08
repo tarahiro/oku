@@ -6,6 +6,7 @@ using UnityEngine;
 public class PostitPhysicsController : MonoBehaviour
 {
     List<PostitPhysics> m_postitPhysicsList = new List<PostitPhysics>();
+    Vector3 m_raycastPoint;
 
     public void NoticeRaycast(PostitPhysics postitPhysics, PlayerInputReciever.TTouchState ttouchState)
     {
@@ -17,7 +18,7 @@ public class PostitPhysicsController : MonoBehaviour
                     //‘¼‚É“®‚¢‚Ä‚¢‚é‚à‚Ì‚ª‚È‚¯‚ê‚ÎA“®‚©‚·
                     if (!m_postitPhysicsList.Any(x => x.state == PostitPhysicsState.Moving))
                     {
-                        postitPhysics.Move();
+                        postitPhysics.Move(m_raycastPoint);
                     }
                     else
                     {
@@ -33,12 +34,17 @@ public class PostitPhysicsController : MonoBehaviour
                 switch (postitPhysics.state)
                 {
                     case PostitPhysicsState.Moving:
-                        postitPhysics.SetPosition();
+                        postitPhysics.SetPosition(m_raycastPoint);
                         break;
 
                 }
             }
         }
+    }
+
+    public void SetRaycastPointOnPlane(Vector3 raycastPoint)
+    {
+        m_raycastPoint = raycastPoint;
     }
 
     public enum PostitPhysicsState

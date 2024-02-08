@@ -5,6 +5,7 @@ using UnityEngine;
 public class PostitPhysics : MonoBehaviour, IRaycastReciever
 {
     PostitPhysicsController controller;
+    [SerializeField] Transform rootTransform;
     public PostitPhysicsController.PostitPhysicsState state { get;private set; }
     public Report m_report;
 
@@ -20,18 +21,16 @@ public class PostitPhysics : MonoBehaviour, IRaycastReciever
         Debug.Log("Raycast");
     }
 
-    public void Move()
+    public void Move(Vector3 t_raycastPoint)
     {
-        SetPosition();
+        SetPosition(t_raycastPoint);
         state = PostitPhysicsController.PostitPhysicsState.Moving;
         Debug.Log("Moving");
     }
 
-    public void SetPosition()
+    public void SetPosition(Vector3 t_raycastPoint)
     {
-        Vector3 correctedMousePosition = StaticVariableCollector.mousePosition;
-        correctedMousePosition.z = transform.position.z;
-        transform.position = Camera.main.ScreenToWorldPoint(correctedMousePosition);
+        rootTransform.position = t_raycastPoint;
         Debug.Log("SetPosition");
     }
 }
