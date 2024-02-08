@@ -12,8 +12,6 @@ public class GameTimeController : MonoBehaviour
     MainManager m_mainManagerCache;
     ReportFactory m_reportFactory;
     Mental m_mental;
-    PlayerInputReciever m_playerInputReciever;
-    PlayerInputExecuter m_playerInputExecuter;
     [SerializeField] GameTimeView m_gameTimeView;
     [SerializeField] ReportController reportController;
 
@@ -22,8 +20,6 @@ public class GameTimeController : MonoBehaviour
         m_mainManagerCache = FindObjectOfType<MainManager>();
         m_reportFactory = FindObjectOfType<ReportFactory>();
         m_mental = FindObjectOfType<Mental>();
-        m_playerInputReciever = FindObjectOfType<PlayerInputReciever>();
-        m_playerInputExecuter = FindObjectOfType<PlayerInputExecuter>();
     }
 
     // Start is called before the first frame update
@@ -34,11 +30,6 @@ public class GameTimeController : MonoBehaviour
 
     public void UpdateDateTime(int ProgressTickCount)
     {
-        //インプットを取得
-        m_playerInputReciever.RecieveKeyInput();
-
-        //インプット処理
-        m_playerInputExecuter.InputExecute();
 
         //ステートによらない共通処理
         UpdateCommonGameTime();

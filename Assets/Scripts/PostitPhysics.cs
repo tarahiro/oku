@@ -4,33 +4,30 @@ using UnityEngine;
 
 public class PostitPhysics : MonoBehaviour, IRaycastReciever
 {
-    PostitPhysicsController controller;
+    ReportControllerView controller;
     [SerializeField] Transform rootTransform;
-    public PostitPhysicsController.PostitPhysicsState state { get;private set; }
+    public ReportControllerView.PostitPhysicsState state { get;private set; }
     public Report m_report;
 
     private void Awake()
     {
-        controller = FindObjectOfType<PostitPhysicsController>();
-        state = PostitPhysicsController.PostitPhysicsState.Standby;
+        controller = FindObjectOfType<ReportControllerView>();
+        state = ReportControllerView.PostitPhysicsState.Standby;
     }
 
     public void RaycastAct(PlayerInputReciever.TTouchState ttouchState)
     {
         controller.NoticeRaycast(this,ttouchState);
-        Debug.Log("Raycast");
     }
 
     public void Move(Vector3 t_raycastPoint)
     {
         SetPosition(t_raycastPoint);
-        state = PostitPhysicsController.PostitPhysicsState.Moving;
-        Debug.Log("Moving");
+        state = ReportControllerView.PostitPhysicsState.Moving;
     }
 
     public void SetPosition(Vector3 t_raycastPoint)
     {
         rootTransform.position = t_raycastPoint;
-        Debug.Log("SetPosition");
     }
 }

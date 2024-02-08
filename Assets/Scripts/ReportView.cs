@@ -10,6 +10,7 @@ public class ReportView : MonoBehaviour
     [SerializeField] TextMeshPro m_nameText;
     [SerializeField] TextMeshPro m_deadLineText;
     [SerializeField] TextMeshPro m_progressText;
+    public PostitPhysics postitPhysics;
 
     //色は付箋の作成方法が固まってから再度検討
     //[SerializeField] Image m_colorImage;

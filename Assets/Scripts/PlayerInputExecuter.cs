@@ -16,6 +16,7 @@ public class PlayerInputExecuter : MonoBehaviour
 
     public void InputExecute()
     {
+        //レイキャスト系処理
         m_reciever.RayCastExecute();
 
         if (m_reciever.m_keyInKeyList.Exists(x => x == KeyCode.Z))

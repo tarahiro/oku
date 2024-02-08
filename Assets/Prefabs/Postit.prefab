@@ -390,6 +390,7 @@ MonoBehaviour:
   m_nameText: {fileID: 1538096768786193058}
   m_deadLineText: {fileID: 6784244262523869454}
   m_progressText: {fileID: 1067512155095109657}
+  postitPhysics: {fileID: 4969319425025171253}
 --- !u!1 &4837479985258462999
 GameObject:
   m_ObjectHideFlags: 0

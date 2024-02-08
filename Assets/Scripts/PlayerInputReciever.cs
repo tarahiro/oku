@@ -25,13 +25,13 @@ public class PlayerInputReciever : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("PlayerInputReciever");
         tTouchState = new TTouchState(null);
     }
 
     private void FixedUpdate()
     {
         StaticVariableCollector.SetMousePosition(Input.mousePosition);
-        
 
         //スマホ対応する時に変える
         Ray ray = Camera.main.ScreenPointToRay(StaticVariableCollector.mousePosition);
@@ -41,31 +41,34 @@ public class PlayerInputReciever : MonoBehaviour
 
     public void RecieveKeyInput()
     {
+        tTouchState = new TTouchState(tTouchState);
         m_keyDownKeyList = m_useKeyList.FindAll(x => Input.GetKeyDown(x));
         m_keyInKeyList = m_useKeyList.FindAll(x => Input.GetKey(x));
         m_keyUpKeyList = m_useKeyList.FindAll(x => Input.GetKeyUp(x));
-        tTouchState = new TTouchState(tTouchState);
     }
 
     public void RayCastExecute()
     {
-        //優先して処理するものを対応
-        for(int i = m_raycastHitList.Count - 1;i >= 0; i--)
+        if (m_raycastHitList != null)
         {
-            if (m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>() != null)
+            //優先して処理するものを対応
+            for (int i = m_raycastHitList.Count - 1; i >= 0; i--)
             {
-                m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>().SetRaycastPoint(m_raycastHitList[i].point);
-                //パフォーマンスのため削除
-                m_raycastHitList.RemoveAt(i);
+                if (m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>() != null)
+                {
+                    m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>().SetRaycastPoint(m_raycastHitList[i].point);
+                    //パフォーマンスのため削除
+                    m_raycastHitList.RemoveAt(i);
+                }
             }
-        }
 
-        //その他の処理
-        for (int i = m_raycastHitList.Count - 1; i >= 0; i--)
-        {
-            if (m_raycastHitList[i].transform.GetComponent<IRaycastReciever>() != null)
+            //その他の処理
+            for (int i = m_raycastHitList.Count - 1; i >= 0; i--)
             {
-                m_raycastHitList[i].transform.GetComponent<IRaycastReciever>().RaycastAct(tTouchState);
+                if (m_raycastHitList[i].transform.GetComponent<IRaycastReciever>() != null)
+                {
+                    m_raycastHitList[i].transform.GetComponent<IRaycastReciever>().RaycastAct(tTouchState);
+                }
             }
         }
     }
@@ -78,6 +81,7 @@ public class PlayerInputReciever : MonoBehaviour
 
         public TTouchState(TTouchState m_prevTouchState)
         {
+            if (Input.GetMouseButton(0)) Debug.Log("MouseButtonIn");
             if(m_prevTouchState == null)
             {
                 IsTouchDown = false;
@@ -86,7 +90,7 @@ public class PlayerInputReciever : MonoBehaviour
             }
             else
             {
-                if (!IsTouchIn)
+                if (!m_prevTouchState.IsTouchIn)
                 {
                     IsTouchDown = Input.GetMouseButton(0);
                     IsTouchIn = Input.GetMouseButton(0);
@@ -96,7 +100,7 @@ public class PlayerInputReciever : MonoBehaviour
                 {
                     IsTouchDown = false;
                     IsTouchIn = Input.GetMouseButton(0);
-                    IsTouchUp = Input.GetMouseButton(0);
+                    IsTouchUp = !Input.GetMouseButton(0);
                 }
             }
         }
