@@ -25,9 +25,9 @@ public class ReportControllerView : MonoBehaviour
 
     }
 
-    public void NoticeRaycast(PostitPhysics postitPhysics, PlayerInputReciever.TTouchState ttouchState)
+    public void NoticeRaycast(PostitPhysics postitPhysics)
     {
-        if (ttouchState.IsTouchDown)
+        if (StaticVariableCollector.tTouchState.IsTouchDown)
         {
             switch (postitPhysics.state)
             {
@@ -56,17 +56,14 @@ public class ReportControllerView : MonoBehaviour
         m_raycastPoint = raycastPoint;
         foreach (ReportView p in m_reportViewList.FindAll(x => x.postitPhysics.state == PostitPhysicsState.Moving))
         {
-            p.postitPhysics.SetPosition(raycastPoint);
+            p.postitPhysics.SetPositionFromRaycast(raycastPoint);
         }
     }
 
     public ReportView AddReport(string reportName, DateTime deadLine, Color color)
     {
         m_reportViewList.Add(Instantiate(reportViewPrefab, transform));
-
-        Transform addedReportTransform = m_reportViewList[m_reportViewList.Count - 1].transform;
-        addedReportTransform.localPosition = Vector3.down * (m_reportViewList.Count - 1) * (postitSizeY + merginY);
-
+        m_reportViewList[m_reportViewList.Count - 1].postitPhysics.SetPosition(PostitNewtralLocalPosition(m_reportViewList.Count - 1));
         m_reportViewList[m_reportViewList.Count - 1].InitializeReport(reportName, deadLine, color);
 
         return m_reportViewList[m_reportViewList.Count - 1];
@@ -79,10 +76,9 @@ public class ReportControllerView : MonoBehaviour
         Moving
     }
 
-    // Update is called once per frame
-    void Update()
+    Vector3 PostitNewtralLocalPosition(int reportCountId)
     {
-        
+        return Vector3.down * (m_reportViewList.Count - 1) * (postitSizeY + merginY);
     }
 
 

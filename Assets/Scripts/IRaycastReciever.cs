@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IRaycastReciever
 {
-    public void RaycastAct(PlayerInputReciever.TTouchState ttouchState);
+    public void RaycastAct();
 }

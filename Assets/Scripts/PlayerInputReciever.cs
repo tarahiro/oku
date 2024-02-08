@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using static PlayerInputReciever;
 
 public class PlayerInputReciever : MonoBehaviour
 {
@@ -16,8 +17,6 @@ public class PlayerInputReciever : MonoBehaviour
     PlayerControllerView m_controllerView;
 
     List<RaycastHit> m_raycastHitList;
-    
-    TTouchState tTouchState;
 
     public List<KeyCode> m_keyDownKeyList { get; private set; }
     public List<KeyCode> m_keyInKeyList { get; private set; }
@@ -25,8 +24,7 @@ public class PlayerInputReciever : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("PlayerInputReciever");
-        tTouchState = new TTouchState(null);
+        StaticVariableCollector.SetTTouchState( new TTouchState(null));
     }
 
     private void FixedUpdate()
@@ -41,7 +39,7 @@ public class PlayerInputReciever : MonoBehaviour
 
     public void RecieveKeyInput()
     {
-        tTouchState = new TTouchState(tTouchState);
+        StaticVariableCollector.SetTTouchState(new TTouchState(StaticVariableCollector.tTouchState));
         m_keyDownKeyList = m_useKeyList.FindAll(x => Input.GetKeyDown(x));
         m_keyInKeyList = m_useKeyList.FindAll(x => Input.GetKey(x));
         m_keyUpKeyList = m_useKeyList.FindAll(x => Input.GetKeyUp(x));
@@ -67,7 +65,7 @@ public class PlayerInputReciever : MonoBehaviour
             {
                 if (m_raycastHitList[i].transform.GetComponent<IRaycastReciever>() != null)
                 {
-                    m_raycastHitList[i].transform.GetComponent<IRaycastReciever>().RaycastAct(tTouchState);
+                    m_raycastHitList[i].transform.GetComponent<IRaycastReciever>().RaycastAct();
                 }
             }
         }
