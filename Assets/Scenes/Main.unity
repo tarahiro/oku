@@ -3207,7 +3207,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d6d9c071bbeae428543bfe216a93f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reportViewPrefab: {fileID: 4615108767160991219, guid: ed4c0546b9f74eb49877025a63fb4885, type: 3}
+  reportViewPrefab: {fileID: 6389012816020965673, guid: e489a7771fc2c074685889dd93d9b19c, type: 3}
+  reportViewList: []
 --- !u!114 &1644531187
 MonoBehaviour:
   m_ObjectHideFlags: 0

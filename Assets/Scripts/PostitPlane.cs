@@ -5,10 +5,10 @@ using UnityEngine;
 public class PostitPlane : MonoBehaviour,IRaycastPointGetter
 {
 
-    ReportControllerView controller;
+    PostitPhysicsController controller;
     private void Awake()
     {
-        controller = FindObjectOfType<ReportControllerView>();
+        controller = FindObjectOfType<PostitPhysicsController>();
     }
 
     public void SetRaycastPoint(Vector3 raycastPoint)

@@ -90,6 +90,15 @@ public class ReportController : MonoBehaviour
             m_view,m_pcDisplayView);
     }
 
+    public void SwitchReport(int movingIndex,int standbyIndex)
+    {
+        Report t_report = m_reportList[movingIndex];
+        m_reportList[movingIndex] = m_reportList[standbyIndex];
+        m_reportList[standbyIndex] = t_report;
+
+        m_view.SwitchReport(movingIndex, standbyIndex);
+;    }
+
     void ClearReport()
     {
         m_reportList[0].Clear();

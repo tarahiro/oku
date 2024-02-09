@@ -7,19 +7,20 @@ public class PlayerInputExecuter : MonoBehaviour
 {
     PlayerInputReciever m_reciever;
     MainManager m_mainManagerCache;
-    ReportControllerView m_reportControllerView;
+    PostitPhysicsController m_postitPhysicsController;
     DebugManager m_debugManager;
 
     private void Awake()
     {
         m_mainManagerCache = FindObjectOfType<MainManager>();
         m_reciever = GetComponent<PlayerInputReciever>();
-        m_reportControllerView = FindObjectOfType<ReportControllerView>();
+        m_postitPhysicsController = FindObjectOfType<PostitPhysicsController>();
         m_debugManager = FindObjectOfType<DebugManager>();  
     }
 
     public void InputExecute()
     {
+        //FixedUpdateの情報をUpdateで使っていたらスキップ
         if (!m_reciever.isFixedUpdated)
         {
             //レイキャスト系処理
@@ -35,7 +36,7 @@ public class PlayerInputExecuter : MonoBehaviour
 
     void ExecuteMouseInput()
     {
-        m_reportControllerView.ReflectMouseInput();
+        m_postitPhysicsController.ReflectMouseInput();
     }
 
     void ExecuteKeyInput()
