@@ -83,10 +83,10 @@ public class ReportController : MonoBehaviour
         SetEfficiencyLevel(JudgeLevel());
     }
 
-    public void AddReport(ReportData reportData)
+    public void AddReport(ReportMasterDataList.ReportMasterData reportData)
     {
         m_reportList.Add(gameObject.AddComponent<Report>());
-        m_reportList[m_reportList.Count - 1].SetReport(reportData.name, reportData.deadLine, reportData.clearTick, reportData.color,
+        m_reportList[m_reportList.Count - 1].SetReport(reportData.name, reportData.GetDeadLine(), reportData.clearTick, reportData.colorId,
             m_view,m_pcDisplayView);
     }
 
@@ -137,24 +137,4 @@ public class ReportController : MonoBehaviour
         }
     }
 
-
-
-    [System.Serializable]
-    public class ReportData
-    {
-        public string name { get; private set; }
-        public DateTime startDate { get; private set; }
-        public DateTime deadLine { get; private set; }
-        public int clearTick { get; private set; }
-        public Color color { get; private set; }
-
-        public ReportData(string name, DateTime startDate, DateTime deadLine, int clearTick, Color color)
-        {
-            this.name = name;
-            this.startDate = startDate;
-            this.deadLine = deadLine;
-            this.clearTick = clearTick;
-            this.color = color;
-        }
-    }
 }

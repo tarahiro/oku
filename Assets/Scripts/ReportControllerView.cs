@@ -24,10 +24,10 @@ public class ReportControllerView : MonoBehaviour
     }
 
 
-    public ReportView AddReport(string reportName, DateTime deadLine, Color color)
+    public ReportView AddReport(string reportName, DateTime deadLine, int colorId)
     {
         reportViewList.Add(Instantiate(reportViewPrefab, transform));
-        reportViewList[reportViewList.Count - 1].InitializeReport(reportName, deadLine, color);
+        reportViewList[reportViewList.Count - 1].InitializeReport(reportName, deadLine, colorId);
         m_postitPhysicsController.SetPostitPosition(reportViewList.Count - 1);
         return reportViewList[reportViewList.Count - 1];
     }

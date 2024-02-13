@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,28 +9,50 @@ public class ReportFactory : MonoBehaviour
 {
     ReportController m_reportControllerCache;
 
-    List<ReportData> m_fakeReportDataList = new List<ReportData>() {
-        new ReportData("現代物理学 レポート",new DateTime(2024,4,2,0,0,0), new DateTime(2024, 4, 5),80, Color.green),
-        new ReportData("統計力学 レポート",new DateTime(2024,4,7,0,0,0), new DateTime(2024, 4, 17),200, Color.yellow),
-        new ReportData("力学A レポート",new DateTime(2024,4,9,0,0,0), new DateTime(2024, 4, 20),80, Color.green),
-        new ReportData("電磁気学A レポート",new DateTime(2024,4,11,0,0,0), new DateTime(2024, 4, 20),80, Color.green),
-    };
+    ReportMasterDataList m_reportDataList;
+    List<ReportData> m_reportData;
 
     private void Awake()
     {
-        m_reportControllerCache = FindObjectOfType<ReportController>(); 
+        m_reportControllerCache = FindObjectOfType<ReportController>();
+        m_reportData = new List<ReportData>();
+
+        m_reportDataList = StaticVariableCollector.GetReportMasterDataList();
+        for (int i = m_reportDataList.Count - 1; i >= 0; i--)
+        {
+            m_reportData.Add( new ReportData(m_reportDataList.TryGetFromIndex(i)));
+        }
     }
 
     public void ReportDataCheck()
     {
 
-        for (int i = m_fakeReportDataList.Count - 1; i >= 0; i--)
+        for (int i = m_reportData.Count - 1; i >= 0; i--)
         {
-            if (StaticVariableCollector.gameTime > m_fakeReportDataList[i].startDate)
+            if (!m_reportData[i].isSet)
             {
-                m_reportControllerCache.AddReport(m_fakeReportDataList[i]);
-                m_fakeReportDataList.RemoveAt(i);
+                if (StaticVariableCollector.gameTime > m_reportData[i].reportMasterData.GetStartDate())
+                {
+                    m_reportControllerCache.AddReport(m_reportData[i].reportMasterData);
+                    m_reportData[i].Set();
+                }
             }
+        }
+    }
+
+    public class ReportData
+    {
+        public ReportMasterDataList.ReportMasterData reportMasterData { get; private set; }
+        public bool isSet { get; private set; } = false;
+
+        public ReportData(ReportMasterDataList.ReportMasterData reportMasterData)
+        {
+            this.reportMasterData = reportMasterData.Copy();
+        }
+
+        public void Set()
+        {
+            isSet = true;
         }
     }
 }

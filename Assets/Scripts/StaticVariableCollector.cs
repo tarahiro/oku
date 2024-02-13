@@ -42,4 +42,16 @@ public static class StaticVariableCollector
         Debug.LogError("不正なステート入力です");
     }
 
+    static ReportMasterDataList m_reportMasterDataList = null;
+    public static ReportMasterDataList GetReportMasterDataList()
+    {
+        if(m_reportMasterDataList == null)
+        {
+            Debug.Log(System.IO.File.Exists("Assets/Resources/Data/Report.asset"));
+            m_reportMasterDataList = Resources.Load<ReportMasterDataList>("Data/Report");
+            Debug.Log(m_reportMasterDataList.Count);
+        }
+        return m_reportMasterDataList;
+    }
+
 }

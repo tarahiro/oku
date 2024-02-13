@@ -31,11 +31,10 @@ public class ReportView : MonoBehaviour
         
     }
 
-    public void InitializeReport(string reportName, DateTime deadLine, Color color)
+    public void InitializeReport(string reportName, DateTime deadLine,int colorId)
     {
         SetNameText(reportName);
         SetDeadLineText(deadLine);
-        SetColor(color);
         SetProgress(0f);
     }
 

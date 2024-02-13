@@ -10,7 +10,6 @@ public class Report : MonoBehaviour
     string m_reportName;
     DateTime m_deadLine;
     public DateTime calculateDeadLine { get;private set; }
-    Color m_color;
 
     int m_currentTick = 0;
     ReportControllerView reportControllerViewCache;
@@ -29,18 +28,17 @@ public class Report : MonoBehaviour
         
     }
 
-    public void SetReport(string reportName, DateTime deadLine, int clearTick, Color color,
+    public void SetReport(string reportName, DateTime deadLine, int clearTick, int colorId,
         ReportControllerView reportControllerView, PcDisplayView pcDisplayView)
     {
         m_reportName = reportName;
         m_deadLine = deadLine;
         calculateDeadLine = m_deadLine + new TimeSpan(1,0,0,0);
         m_clearTick = clearTick;
-        m_color = color;
         reportControllerViewCache = reportControllerView;
         pcDisplayViewCache = pcDisplayView;
 
-        reportViewCache = reportControllerView.AddReport(m_reportName, m_deadLine, m_color);
+        reportViewCache = reportControllerView.AddReport(m_reportName, m_deadLine,colorId);
     }
 
     public void Clear()

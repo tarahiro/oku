@@ -64,7 +64,6 @@ public class PlayerInputReciever : MonoBehaviour
             //—Dæ‚µ‚Äˆ—‚·‚é‚à‚Ì‚ð‘Î‰ž
             for (int i = m_raycastHitList.Count - 1; i >= 0; i--)
             {
-                Debug.Log(m_raycastHitList[i]);
                 if (m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>() != null)
                 {
                     m_raycastHitList[i].transform.GetComponent<IRaycastPointGetter>().SetRaycastPoint(m_raycastHitList[i].point);
