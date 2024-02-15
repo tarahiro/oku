@@ -1,17 +1,44 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DebugManager : MonoBehaviour
 {
-    GameTimeCounter gameTimeCounter;
+    TimeController timeController;
+    ReportController reportController;
+    ReportFactory reportFactory;
+
+    List<DateTime> debugDateTimeList = new List<DateTime>()
+    {
+        new DateTime(2024, 4, 23),
+        new DateTime(2024,5,6)
+    };
+
     private void Awake()
     {
-        gameTimeCounter = FindObjectOfType<GameTimeCounter>();
+        timeController = FindObjectOfType<TimeController>();
+        reportController = FindObjectOfType<ReportController>();
+        reportFactory = FindObjectOfType<ReportFactory>();
     }
 
     public void SkipToNextDay()
     {
-        gameTimeCounter.GoToNextDay();
+        timeController.GoToNextDay();
+    }
+
+    //特定の日付に移動。レポートはすべてクリアにする
+    public void SkipToSpecificDayWithoutReport()
+    {
+        for (int i = 0; i < debugDateTimeList.Count; i++)
+        {
+            if (StaticVariableCollector.gameTime < debugDateTimeList[i])
+            {
+                reportController.ForceAllReportClear();
+                reportFactory.ForceReportSet(debugDateTimeList[i]);
+                timeController.GoToSpecificDay(debugDateTimeList[i]);
+                break;
+            }
+        }
     }
 }

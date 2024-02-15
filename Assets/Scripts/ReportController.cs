@@ -99,6 +99,14 @@ public class ReportController : MonoBehaviour
         m_view.SwitchReport(movingIndex, standbyIndex);
 ;    }
 
+    public void ForceAllReportClear()
+    {
+        while(m_reportList.Count > 0)
+        {
+            ClearReport();
+        }
+    }
+
     void ClearReport()
     {
         m_reportList[0].Clear();

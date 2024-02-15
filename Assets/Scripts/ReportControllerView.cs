@@ -45,5 +45,9 @@ public class ReportControllerView : MonoBehaviour
     public void Clear()
     {
         reportViewList.RemoveAt(0);
+        for (int i = 0; i < reportViewList.Count; i++)
+        {
+            m_postitPhysicsController.SetPostitPosition(i);
+        }
     }
 }

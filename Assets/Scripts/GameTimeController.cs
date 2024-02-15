@@ -7,7 +7,6 @@ public class GameTimeController : MonoBehaviour
 {
     [SerializeField] GameTimeCounter m_counter;
 
-    DateTime StartDateTime = new DateTime(2024, 4, 1, 10, 0, 0);
 
     MainManager m_mainManagerCache;
     ReportFactory m_reportFactory;
@@ -20,12 +19,6 @@ public class GameTimeController : MonoBehaviour
         m_mainManagerCache = FindObjectOfType<MainManager>();
         m_reportFactory = FindObjectOfType<ReportFactory>();
         m_mental = FindObjectOfType<Mental>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        m_counter.Set(StartDateTime,this);
     }
 
     public void UpdateDateTime(int ProgressTickCount)

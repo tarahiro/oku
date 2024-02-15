@@ -3234,7 +3234,6 @@ GameObject:
   - component: {fileID: 1655090150}
   - component: {fileID: 1655090153}
   - component: {fileID: 1655090154}
-  - component: {fileID: 1655090149}
   - component: {fileID: 1655090156}
   - component: {fileID: 1655090157}
   - component: {fileID: 1655090155}
@@ -3247,18 +3246,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1655090149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1655090148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad4afcbaa7c6ea147b80689b8e80b14f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1655090150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3275,6 +3262,7 @@ MonoBehaviour:
   m_reportController: {fileID: 1655090153}
   m_playerControllerView: {fileID: 1171706562}
   m_pcDisplayView: {fileID: 1706584430}
+  m_TimeController: {fileID: 1655090159}
 --- !u!114 &1655090151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3332,7 +3320,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01246381210dbe04b9d0a76b0454302b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_counter: {fileID: 1655090149}
   m_gameTimeView: {fileID: 1709187471}
   reportController: {fileID: 1655090153}
 --- !u!114 &1655090155

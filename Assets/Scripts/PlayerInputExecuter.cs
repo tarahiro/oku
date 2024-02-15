@@ -44,7 +44,8 @@ public class PlayerInputExecuter : MonoBehaviour
 
         if (m_reciever.m_keyInKeyList.Exists(x => x == KeyCode.Z))
         {
-            if (StaticVariableCollector.mainState != MainManager.MainState.Savotage) Savotage();
+            if (StaticVariableCollector.mainState != MainManager.MainState.Savotage
+                && StaticVariableCollector.mainState != MainManager.MainState.Exhausted) Savotage();
         }
         else
         {
@@ -54,6 +55,11 @@ public class PlayerInputExecuter : MonoBehaviour
         if (m_reciever.m_keyDownKeyList.Exists(x => x == KeyCode.Tab))
         {
             m_debugManager.SkipToNextDay();
+        }
+
+        if (m_reciever.m_keyDownKeyList.Exists(x => x == KeyCode.Escape))
+        {
+            m_debugManager.SkipToSpecificDayWithoutReport();
         }
     }
 

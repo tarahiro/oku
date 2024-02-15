@@ -10,12 +10,14 @@ public class MainManager : MonoBehaviour
     [SerializeField]ReportController m_reportController;
     [SerializeField]PlayerControllerView m_playerControllerView;
     [SerializeField] PcDisplayView m_pcDisplayView;
+    [SerializeField] TimeController m_TimeController;
+    DateTime StartDateTime = new DateTime(2024, 4, 1, 10, 0, 0);
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_TimeController.SetStartTime(StartDateTime);
     }
 
     private void OnEnable()
@@ -82,7 +84,7 @@ public class MainManager : MonoBehaviour
 
     public void StartReport()
     {
-        StaticVariableCollector.SetMainState(MainState.Report);
+        if(StaticVariableCollector.mainState != MainState.Report) StaticVariableCollector.SetMainState(MainState.Report);
         m_reportController.StartReport();
         m_playerControllerView.StartReport();
     }

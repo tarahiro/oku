@@ -40,6 +40,20 @@ public class ReportFactory : MonoBehaviour
         }
     }
 
+    //指定の時間までのレポートを強制的にセットされた状態にする
+    public void ForceReportSet(DateTime d)
+    {
+
+        for (int i = m_reportData.Count - 1; i >= 0; i--)
+        {
+            if (d > m_reportData[i].reportMasterData.GetStartDate())
+            {
+                m_reportData[i].Set();
+            }
+        }
+
+    }
+
     public class ReportData
     {
         public ReportMasterDataList.ReportMasterData reportMasterData { get; private set; }
