@@ -43,6 +43,11 @@ public class ReportView : MonoBehaviour
         SetProgress((float)currentTick / clearTick);
     }
 
+    public void Finish()
+    {
+
+    }
+
     public void Clear()
     {
         Destroy(gameObject);

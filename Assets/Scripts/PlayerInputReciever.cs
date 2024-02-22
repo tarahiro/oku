@@ -11,7 +11,8 @@ public class PlayerInputReciever : MonoBehaviour
     {
         KeyCode.Z,
         KeyCode.Escape,
-        KeyCode.Tab
+        KeyCode.Tab,
+        KeyCode.Space
     };
 
     PlayerControllerView m_controllerView;

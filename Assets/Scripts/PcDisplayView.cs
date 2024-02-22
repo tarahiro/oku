@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Cinemachine;
 
 public class PcDisplayView : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class PcDisplayView : MonoBehaviour
     [SerializeField] WordView m_wordView;
     [SerializeField] MailView m_mailView;
     [SerializeField] GameObject m_restObject;
+    [SerializeField] CinemachineImpulseSource m_impulseSource;
+    [SerializeField] EffectHandler m_reportClearEffectHandler;
     PcDisplayViewState m_currentState;
 
     bool m_isMailing = false;
@@ -63,10 +66,18 @@ public class PcDisplayView : MonoBehaviour
         m_restObject.SetActive(true);
     }
 
-    public void ClearReport(string reportName)
+    public void FinishReport(string reportName)
     {
         m_mailView.gameObject.SetActive(true);
         m_mailView.SetMail(reportName);
+
+    }
+
+    public void ClearReport()
+    {
+        m_reportClearEffectHandler.CallEffect();
+        m_mailView.SendMail();
+        m_impulseSource.GenerateImpulse();
         m_isMailing = true;
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -26,6 +27,7 @@ public class ReportController : MonoBehaviour
 
     List<Report> m_reportList;
     int m_currentLevel = 0;
+    int m_currentActiveReportIndex = -1;
 
     bool m_isExausted = false;
 
@@ -50,9 +52,9 @@ public class ReportController : MonoBehaviour
         //レベル判定
         SetEfficiencyLevel(JudgeLevel());
 
-        if (m_reportList[0].IsClearReport(StaticVariableCollector.gameTime, ProgressTickCount * c_reportEfficiency[m_currentLevel]))
+        if (m_reportList[m_currentActiveReportIndex].IsClearReport(ProgressTickCount * c_reportEfficiency[m_currentLevel]))
         {
-            ClearReport();
+            FinishReport();
         }
 
         //メンタル消費
@@ -72,22 +74,14 @@ public class ReportController : MonoBehaviour
         }
     }
 
-    public bool IsReportExist()
-    {
-        return m_reportList.Count > 0;
-    }
 
-    public void StartReport()
-    {
-        m_reportList[0].StartReport();
-        SetEfficiencyLevel(JudgeLevel());
-    }
 
     public void AddReport(ReportMasterDataList.ReportMasterData reportData)
     {
         m_reportList.Add(gameObject.AddComponent<Report>());
         m_reportList[m_reportList.Count - 1].SetReport(reportData.name, reportData.GetDeadLine(), reportData.clearTick, reportData.colorId,
             m_view,m_pcDisplayView);
+        TryStartNewReport();
     }
 
     public void SwitchReport(int movingIndex,int standbyIndex)
@@ -97,23 +91,52 @@ public class ReportController : MonoBehaviour
         m_reportList[standbyIndex] = t_report;
 
         m_view.SwitchReport(movingIndex, standbyIndex);
-;    }
+
+        if (m_currentActiveReportIndex == movingIndex)
+        {
+            m_currentActiveReportIndex = standbyIndex;
+        }
+        else if (m_currentActiveReportIndex == standbyIndex)
+        {
+            m_currentActiveReportIndex = movingIndex;
+        }
+
+        TryStartNewReport();
+    }
 
     public void ForceAllReportClear()
     {
+        while(m_reportList.Any(x => !x.isFinished))
+        {
+            FinishReport();
+            TryStartNewReport();
+        }
         while(m_reportList.Count > 0)
         {
             ClearReport();
         }
     }
 
-    void ClearReport()
+    void FinishReport()
     {
-        m_reportList[0].Clear();
-        m_reportList.RemoveAt(0);
-        m_view.Clear();
+        m_reportList[m_currentActiveReportIndex].Finish();
+        m_currentActiveReportIndex = -1;
         m_levelView.SetReportEfficiencyLevel(0);
-        m_mainManager.ClearReport();
+        m_mainManager.JudgeState();
+    }
+
+    public void ClearReport()
+    {
+        for (int i = m_reportList.Count - 1; i >= 0; i--)
+        {
+            if (m_reportList[i].isFinished)
+            {
+                m_reportList[i].Clear();
+                m_reportList.RemoveAt(i);
+                m_view.Clear(i);
+                if(m_currentActiveReportIndex > i) m_currentActiveReportIndex--;
+            }
+        }
     }
 
     int JudgeLevel()
@@ -122,12 +145,12 @@ public class ReportController : MonoBehaviour
         if (StaticVariableCollector.mainState == MainManager.MainState.Savotage) return 0;
 
         //スタックされたレポートがなかったらレベル0
-        if (m_reportList.Count == 0) return 0;
+        if (m_currentActiveReportIndex < 0) return 0;
 
         //作成中レポートの締め切りと今の時間を照合してレベル判定
         for (int i = 0; i < c_timeSpanOfReportEfficiency.Count; i++)
         {
-            if (m_reportList[0].calculateDeadLine - StaticVariableCollector.gameTime< c_timeSpanOfReportEfficiency[i])
+            if (m_reportList[m_currentActiveReportIndex].calculateDeadLine - StaticVariableCollector.gameTime< c_timeSpanOfReportEfficiency[i])
             {
                 return c_timeSpanOfReportEfficiency.Count - i;
             }
@@ -143,6 +166,37 @@ public class ReportController : MonoBehaviour
         {
             m_levelView.SetReportEfficiencyLevel(m_currentLevel);
         }
+    }
+
+    public bool TryStartNewReport()
+    {
+        int maxIndex = m_currentActiveReportIndex < 0 ? m_reportList.Count : m_currentActiveReportIndex;
+        for (int i = 0; i < maxIndex; i++)
+        {
+            if (!m_reportList[i].isFinished)
+            {
+                m_currentActiveReportIndex = i;
+                m_reportList[m_currentActiveReportIndex].StartReport();
+                SetEfficiencyLevel(JudgeLevel());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool TryStartReport()
+    {
+        for(int i = 0; i < m_reportList.Count; i++)
+        {
+            if (!m_reportList[i].isFinished)
+            {
+                m_currentActiveReportIndex = i;
+                m_reportList[m_currentActiveReportIndex].StartReport();
+                SetEfficiencyLevel(JudgeLevel());
+                return true;
+            }
+        }
+        return false;
     }
 
 }

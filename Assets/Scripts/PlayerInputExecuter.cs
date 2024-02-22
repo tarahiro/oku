@@ -9,6 +9,7 @@ public class PlayerInputExecuter : MonoBehaviour
     MainManager m_mainManagerCache;
     PostitPhysicsController m_postitPhysicsController;
     DebugManager m_debugManager;
+    ReportController m_reportController;
 
     private void Awake()
     {
@@ -16,6 +17,7 @@ public class PlayerInputExecuter : MonoBehaviour
         m_reciever = GetComponent<PlayerInputReciever>();
         m_postitPhysicsController = FindObjectOfType<PostitPhysicsController>();
         m_debugManager = FindObjectOfType<DebugManager>();  
+        m_reportController = FindObjectOfType<ReportController>();
     }
 
     public void InputExecute()
@@ -50,6 +52,12 @@ public class PlayerInputExecuter : MonoBehaviour
         else
         {
             if (StaticVariableCollector.mainState == MainManager.MainState.Savotage) RemoveSavotage();
+        }
+
+
+        if (m_reciever.m_keyDownKeyList.Exists(x => x == KeyCode.Space))
+        {
+            m_reportController.ClearReport();
         }
 
         if (m_reciever.m_keyDownKeyList.Exists(x => x == KeyCode.Tab))

@@ -10,6 +10,7 @@ public class Report : MonoBehaviour
     string m_reportName;
     DateTime m_deadLine;
     public DateTime calculateDeadLine { get;private set; }
+    public bool isFinished { get; private set; } = false;
 
     int m_currentTick = 0;
     ReportControllerView reportControllerViewCache;
@@ -41,10 +42,17 @@ public class Report : MonoBehaviour
         reportViewCache = reportControllerView.AddReport(m_reportName, m_deadLine,colorId);
     }
 
+    public void Finish()
+    {
+        isFinished = true;
+        pcDisplayViewCache.FinishReport(m_reportName);
+    }
+
     public void Clear()
     {
         reportViewCache.Clear();
-        pcDisplayViewCache.ClearReport(m_reportName);
+        pcDisplayViewCache.ClearReport();
+        SoundManager.PlaySE(SoundManager.SELabel.Enter);
         Destroy(this);
     }
 
@@ -53,7 +61,7 @@ public class Report : MonoBehaviour
         pcDisplayViewCache.StartReport(m_reportName, m_currentTick, m_clearTick);
     }
 
-    public bool IsClearReport(DateTime NowGameTime, int ProgressTickCount)
+    public bool IsClearReport(int ProgressTickCount)
     {
         m_currentTick += ProgressTickCount;
         pcDisplayViewCache.ProgressReport(m_currentTick, m_clearTick);

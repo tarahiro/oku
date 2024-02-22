@@ -12,6 +12,8 @@ public class MainManager : MonoBehaviour
     [SerializeField] PcDisplayView m_pcDisplayView;
     [SerializeField] TimeController m_TimeController;
     DateTime StartDateTime = new DateTime(2024, 4, 1, 10, 0, 0);
+    
+    public MainState mainState { get; private set; }
 
 
     // Start is called before the first frame update
@@ -22,7 +24,7 @@ public class MainManager : MonoBehaviour
 
     private void OnEnable()
     {
-        StaticVariableCollector.SetMainState(MainState.None);
+        SetMainState(MainState.None);
     }
 
     // Update is called once per frame
@@ -38,7 +40,7 @@ public class MainManager : MonoBehaviour
 
     public void Exaust()
     {
-        StaticVariableCollector.SetMainState(MainState.Exhausted);
+        SetMainState(MainState.Exhausted);
         m_playerControllerView.Exaust();
         m_pcDisplayView.Exaust();
     }
@@ -55,7 +57,7 @@ public class MainManager : MonoBehaviour
 
     public void Savotage()
     {
-        StaticVariableCollector.SetMainState(MainState.Savotage);
+        SetMainState(MainState.Savotage);
         m_playerControllerView.Savotage();
         m_pcDisplayView.Savotage();
     }
@@ -68,9 +70,10 @@ public class MainManager : MonoBehaviour
     public void JudgeState()
     {
         //レポートがあるかないかを判定。あるならReport、ないならRestへステート遷移
-        if (m_reportController.IsReportExist())
+        if (m_reportController.TryStartReport())
         {
-            StartReport();
+            m_playerControllerView.StartReport();
+            SetMainState(MainState.Report);
         }
         else
         {
@@ -82,21 +85,19 @@ public class MainManager : MonoBehaviour
 
     }
 
-    public void StartReport()
-    {
-        if(StaticVariableCollector.mainState != MainState.Report) StaticVariableCollector.SetMainState(MainState.Report);
-        m_reportController.StartReport();
-        m_playerControllerView.StartReport();
-    }
 
-    public void ClearReport()
+    void SetMainState(MainState t_mainState)
     {
-        JudgeState();
+        if (mainState == t_mainState && mainState != MainState.None)
+        {
+            EllegalStateInput();
+        }
+        mainState = t_mainState;
     }
 
     public void Rest()
     {
-        StaticVariableCollector.SetMainState(MainState.Rest);
+        SetMainState(MainState.Rest);
         m_pcDisplayView.Rest();
     }
 
@@ -107,6 +108,10 @@ public class MainManager : MonoBehaviour
         Savotage,
         Exhausted,
         Rest
+    }
+    void EllegalStateInput()
+    {
+        Debug.LogError("不正なステート入力です");
     }
 
 }

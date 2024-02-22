@@ -11,6 +11,8 @@ public class DebugManager : MonoBehaviour
 
     List<DateTime> debugDateTimeList = new List<DateTime>()
     {
+        new DateTime(2024, 4, 5),
+        new DateTime(2024, 4, 14),
         new DateTime(2024, 4, 23),
         new DateTime(2024,5,6)
     };
